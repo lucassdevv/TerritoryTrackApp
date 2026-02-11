@@ -1,0 +1,9 @@
+# Archivos de entorno
+.env
+.env.*
+# Sistema operativo
+.DS_Store
+Thumbs.db
+# IDEs
+.idea/
+.vscode/

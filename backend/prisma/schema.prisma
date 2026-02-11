@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Publisher {
+  id Int @id @default(autoincrement())
+  idRole Int 
+  name String
+  lastName String
+
+  availabilities PublisherAvailability[]
+  role Role @relation(fields: [idRole], references: [id])
+  userSystem UserSystem? 
+
+  territoryRecords TerritoryRecord[]
+  
+}
+
+model Role{
+  id Int @id @default(autoincrement())
+  roleName String @unique
+  publishers Publisher[]
+}
+
+model PublisherAvailability {
+  id Int @id @default(autoincrement())
+  publisherId Int 
+  startTime DateTime
+  endTime DateTime
+  day Int
+
+  publisher Publisher @relation(fields: [publisherId], references: [id])
+  
+  @@index([publisherId])
+}
+
+model UserSystem {
+  id String @id 
+  publisherId Int @unique
+  hashedPassword String
+
+  publisher Publisher @relation(fields: [publisherId], references: [id])
+}
+
+
+model OutingAvailability{
+  id Int @id @default(autoincrement())
+  outingPlaceId Int 
+  startTime DateTime
+  endTime DateTime
+  day Int
+
+  outingPlace OutingPlace @relation(fields: [outingPlaceId], references: [id])
+
+  @@index([outingPlaceId])
+}
+
+model OutingPlace{
+  id Int @id @default(autoincrement())
+  familyName String @unique
+  address String
+  availabilities OutingAvailability[]
+  territories OutingTerritory[]
+  territoryRecords TerritoryRecord[]
+}
+
+model OutingTerritory{
+  id Int @id @default(autoincrement())
+  territoryId Int 
+  outingPlaceId Int 
+
+  outingPlace OutingPlace @relation(fields: [outingPlaceId], references: [id])
+  territory Territory @relation(fields: [territoryId], references: [id])
+
+  @@unique([territoryId, outingPlaceId])
+}
+
+model Territory{
+  id Int @id @default(autoincrement())
+  territoryNumber Int @unique
+  mapColor String
+  territoryType TerritoryType
+  outingTerritories OutingTerritory[]
+
+  blocks Block[]
+  territoryRecords TerritoryRecord[]
+}
+
+model Block{
+  id Int @id @default(autoincrement())
+  territoryId Int
+  badge String
+
+  territory Territory @relation(fields: [territoryId], references: [id])
+  blockRecords BlockRecord[]
+
+  @@unique([territoryId, badge])
+}
+
+
+model BlockRecord{
+  id Int @id @default(autoincrement())
+  blockId Int
+  territoryRecordId Int
+
+  block Block @relation(fields: [blockId], references: [id])
+  territoryRecord TerritoryRecord @relation(fields: [territoryRecordId], references: [id])
+
+  @@unique([blockId, territoryRecordId])
+}
+
+model TerritoryRecord{
+  id Int @id @default(autoincrement())
+  territoryId Int
+  publisherId Int 
+  outingPlaceId Int
+  comment String?
+  dateAssigned DateTime
+  dateWorked DateTime
+  dateCompleted DateTime?
+
+  territory Territory @relation(fields: [territoryId], references: [id])
+  publisher Publisher @relation(fields: [publisherId], references: [id])
+  outingPlace OutingPlace @relation(fields: [outingPlaceId], references: [id])
+
+  blockRecords BlockRecord[]
+
+  @@index([territoryId])
+  @@index([publisherId])
+  @@index([outingPlaceId])
+ 
+}
+
+
+
+
+enum TerritoryType {
+  NORMAL
+  RURAL
+  BLOCKS
+}

@@ -1,0 +1,91 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            <div class="card bg-dark rounded-4">
+                <div class="card-title">
+                    <p class="text-white p-2">Registro del territorio</p>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="numberTerritory" class="form-label text-white">Numero Del Territorio</label>
+                        <input type="number" class="form-control" placeholder="N°12">
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label text-white">Capitan de grupo</label>
+                        @if (publishers.isLoading()) {
+                            <select class="form-select" disabled>
+                                <option>Cargando...</option>
+                            </select>
+                        }
+                        @if (publishers.hasValue()) {
+                            <select class="form-select">
+                            <option selected>Seleccionar Capitan</option>
+                            @for (cap of publishers.value(); track cap.id) {
+                                <option [value]="cap.id">{{cap.name + " " + cap.lastName}}</option>
+                            }
+                            </select>
+                        }
+                        @if (publishers.error()) {
+                            <br>
+                            <span class="text-danger">Error al cargar!</span>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label text-white">Lugar de Salida</label>
+                        <select for="outingPlaceName" class="form-select">
+                            <option value="1">Familia Molina</option>
+                            <option value="2">Graciela Diaz</option>
+                            <option value="3">Familia Aros</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateAssigned" class="form-label text-white">Fecha asignado.</label>
+                        <input type="date" class="form-control" id="fecha1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateWorked" class="form-label text-white">Fecha trabajado.</label>
+                        <input type="date" class="form-control" id="fecha2">
+                    </div>
+                    <label for="allBlocksCompleted" class="form-label text-white">Se hizo completo?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault">
+                        <label class="form-check-label text-white">
+                        SI
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault"  checked>
+                        <label class="form-check-label text-white">
+                            NO
+                        </label>
+                    </div>
+                    
+                    <p class="text-white mb-0">Manzanas trabajadas</p>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                        <label for="" class="form-check-label text-white">A</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                        <label for="" class="form-check-label text-white">B</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input">
+                        <label for="" class="form-check-label text-white">C</label>
+                    </div>
+
+                    <div>
+                        <label for="" class="form-label text-white ">Comentario</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

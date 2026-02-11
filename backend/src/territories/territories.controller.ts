@@ -1,0 +1,31 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
+import { TerritoriesService } from './territories.service';
+import { CreateTerritoryDto } from './dto/create-territory.dto';
+import { UpdateTerritoryDto } from './dto/update-territory.dto';
+
+@Controller('territories')
+export class TerritoriesController {
+  constructor(private readonly territoriesService: TerritoriesService) {}
+
+  @Post()
+  create(@Body() createTerritoryDto: CreateTerritoryDto) {
+    return this.territoriesService.create(createTerritoryDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.territoriesService.findAll();
+  }
+
+  @Get('status')
+  getStatus(@Query('days', ParseIntPipe) days: number){
+    return this.territoriesService.findTerritoriresStatus(days)
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.territoriesService.findOne(+id);
+  }
+
+
+}

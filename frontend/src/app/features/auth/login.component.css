@@ -1,0 +1,21 @@
+.bg-image{
+  background-image: url('3.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bg-custom-dark{
+  background-color: #101A2D;
+  
+}
+
+.bg-custom-card{
+  background-color: #0F2146;
+}
+
+.bg-custom-button{
+  background-color: #449bf3;
+}
+
+

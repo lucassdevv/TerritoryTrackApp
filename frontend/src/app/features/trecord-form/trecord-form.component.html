@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="numberTerritory" class="form-label text-white">Numero Del Territorio</label>
-                        <input type="number" class="form-control" placeholder="N°12">
+                        <input type="number" class="form-control" [value]="territoryNumber()" (input)="onTerritoryChange($event)">
                     </div>
 
 
@@ -34,12 +34,24 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="" class="form-label text-white">Lugar de Salida</label>
-                        <select for="outingPlaceName" class="form-select">
-                            <option value="1">Familia Molina</option>
-                            <option value="2">Graciela Diaz</option>
-                            <option value="3">Familia Aros</option>
-                        </select>
+                        <label class="form-label text-white">Lugar de Salida</label>
+                        @if (outingPlaces.isLoading()) {
+                            <select class="form-select" disabled>
+                                <option>Cargando...</option>
+                            </select>
+                        }
+                        @if (outingPlaces.hasValue()) {
+                            <select class="form-select">
+                                <option selected>Seleccionar Lugar</option>
+                                @for (place of outingPlaces.value(); track place.id) {
+                                    <option [value]="place.id">{{place.familyName}}</option>
+                                }
+                            </select>
+                        }
+                        @if (outingPlaces.error()) {
+                            <br>
+                            <span class="text-danger">Error al cargar!</span>
+                        }
                     </div>
                     <div class="mb-3">
                         <label for="dateAssigned" class="form-label text-white">Fecha asignado.</label>
@@ -51,37 +63,32 @@
                     </div>
                     <label for="allBlocksCompleted" class="form-label text-white">Se hizo completo?</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault">
+                        <input class="form-check-input" type="radio" [value]="true" name="flexRadioDefault"[checked]="isCompleted()===true" (change)="isCompleted.set(true)">
                         <label class="form-check-label text-white">
                         SI
                         </label>
                     </div>
 
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault"  checked>
+                        <input class="form-check-input" type="radio" 
+                        name="flexRadioDefault" [value]="false" [checked]="isCompleted() === false" (change)="isCompleted.set(false)">
                         <label class="form-check-label text-white">
                             NO
                         </label>
                     </div>
+                        @if (blocks.hasValue()) {
+                            <h6 class="text-white" >Manzanas del territorio °{{territoryNumber()}}</h6>
+                            
+                            @for (block of blocks.value().blocks; track block.id) {
+                                <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                                <label class="form-check-label text-white">{{block.badge}}</label>
+                            </div>
+                            }
+                        }
                     
-                    <p class="text-white mb-0">Manzanas trabajadas</p>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input">
-                        <label for="" class="form-check-label text-white">A</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input">
-                        <label for="" class="form-check-label text-white">B</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input">
-                        <label for="" class="form-check-label text-white">C</label>
-                    </div>
-
                     <div>
-                        <label for="" class="form-label text-white ">Comentario</label>
+                        <label  class="form-label text-white ">Comentario</label>
                         <input type="text" class="form-control">
                     </div>
                 </div>

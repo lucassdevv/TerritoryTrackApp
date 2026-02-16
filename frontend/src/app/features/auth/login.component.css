@@ -1,21 +1,8 @@
-.bg-image{
-  background-image: url('3.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+body {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
 }
-
-.bg-custom-dark{
-  background-color: #101A2D;
-  
+.icon-box {
+    width: 70px;
+    height: 70px;
+    background: #dc3545;
 }
-
-.bg-custom-card{
-  background-color: #0F2146;
-}
-
-.bg-custom-button{
-  background-color: #449bf3;
-}
-
-

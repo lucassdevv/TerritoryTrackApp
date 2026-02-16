@@ -16,9 +16,10 @@ export class TerritoriesService {
     return this.prisma.territory.findMany();
   }
 
-  async findOne(id: number){
+  async findOneByTerritoryNumber(id: number){
     return this.prisma.territory.findUnique({
-      where: {id}
+      where: {territoryNumber: id},
+      include: {blocks:true},
     })
   }
 

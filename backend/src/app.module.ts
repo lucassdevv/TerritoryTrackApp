@@ -5,6 +5,7 @@ import { TerritoryRecordModule } from './territory-record/territory-record.modul
 import { TerritoriesModule } from './territories/territories.module';
 import { PublishersModule } from './publishers/publishers.module';
 import { OutingPlacesModule } from './outing-places/outing-places.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { OutingPlacesModule } from './outing-places/outing-places.module';
     TerritoryRecordModule,
     TerritoriesModule,
     PublishersModule,
-    OutingPlacesModule
+    OutingPlacesModule,
+    AuthModule
   ]
 })
 export class AppModule { }

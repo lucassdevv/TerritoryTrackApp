@@ -22,9 +22,9 @@ export class TerritoriesController {
     return this.territoriesService.findTerritoriresStatus(days)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.territoriesService.findOne(+id);
+  @Get(':territoryNumber')
+  findOne(@Param('territoryNumber') territoryNumber: string) {
+    return this.territoriesService.findOneByTerritoryNumber(+territoryNumber);
   }
 
 

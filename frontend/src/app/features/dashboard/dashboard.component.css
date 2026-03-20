@@ -1,0 +1,18 @@
+/* Additional logic to make outline-secondary buttons look better with grey border instead of thick dark one if needed */
+.btn-outline-secondary {
+    border-color: #dee2e6;
+}
+.btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+}
+.cursor-pointer {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.cursor-pointer:hover {
+    background-color: #f8f9fa !important;
+}
+.detail-row td {
+    padding: 0 !important;
+}

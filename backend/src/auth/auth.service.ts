@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {  JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -10,16 +11,25 @@ export class AuthService {
     async validateUser (user: LoginDto){
         const foundUser = await this.prisma.userSystem.findUnique({
             where: {id: user.id},
+            include: {
+                publisher: {
+                    include: { role: true }
+                }
+            }
         })
 
         if(!foundUser){return null}
 
-        if(foundUser.hashedPassword === user.password){
+        const isMatch = await bcrypt.compare(user.password, foundUser.hashedPassword);
+
+        if(isMatch){
             return this.jwtService.sign({
                 id: foundUser.id,
-                publisherId: foundUser.publisherId
+                publisherId: foundUser.publisherId,
+                roleName: foundUser.publisher.role.roleName
             })
         }
+        return null;
     }
 
     

@@ -13,13 +13,13 @@ export class CreateTerritoryRecordDto {
     @IsPositive()
     outingPlaceId: number;
 
-    @IsDate()
+    @IsString()
     @IsNotEmpty()
-    dateAssigned: Date;
+    dateAssigned: string;
 
-    @IsDate()
+    @IsString()
     @IsNotEmpty()
-    dateWorked: Date;
+    dateWorked: string;
 
     @IsBoolean()
     @IsNotEmpty()

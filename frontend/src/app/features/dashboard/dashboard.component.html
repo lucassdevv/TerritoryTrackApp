@@ -1,1 +1,218 @@
-<h1>dashboardcomponent!</h1>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 text-dark">Territorios</h4>
+                    
+                    <!-- Days Filter Chips -->
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="text-secondary small text-uppercase fw-bold me-3">Periodo (días):</span>
+                        <div class="btn-group" role="group">
+                            <input type="radio" class="btn-check" name="daysFilter" id="days14" autocomplete="off" 
+                                [checked]="activeDaysFilter() === 14" (change)="setDaysFilter(14)">
+                            <label class="btn btn-outline-secondary btn-sm px-3" for="days14">14</label>
+
+                            <input type="radio" class="btn-check" name="daysFilter" id="days30" autocomplete="off"
+                                [checked]="activeDaysFilter() === 30" (change)="setDaysFilter(30)">
+                            <label class="btn btn-outline-secondary btn-sm px-3" for="days30">30</label>
+
+                            <input type="radio" class="btn-check" name="daysFilter" id="days60" autocomplete="off"
+                                [checked]="activeDaysFilter() === 60" (change)="setDaysFilter(60)">
+                            <label class="btn btn-outline-secondary btn-sm px-3" for="days60">60</label>
+                        </div>
+                    </div>
+
+                    <!-- Status Filters -->
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <button class="btn rounded-pill px-4 fw-medium" 
+                            [class.btn-danger]="activeStatusFilter() === 'Todos'"
+                            [class.btn-outline-secondary]="activeStatusFilter() !== 'Todos'"
+                            [class.text-dark]="activeStatusFilter() !== 'Todos'"
+                            (click)="setStatusFilter('Todos')">
+                            Todos
+                        </button>
+                        <button class="btn rounded-pill px-4 fw-medium" 
+                            [class.btn-success]="activeStatusFilter() === 'COMPLETADO'"
+                            [class.btn-outline-secondary]="activeStatusFilter() !== 'COMPLETADO'"
+                            [class.text-dark]="activeStatusFilter() !== 'COMPLETADO'"
+                            (click)="setStatusFilter('COMPLETADO')">
+                            Completado
+                        </button>
+                        <button class="btn rounded-pill px-4 fw-medium" 
+                            [class.btn-warning]="activeStatusFilter() === 'INCOMPLETO'"
+                            [class.btn-outline-secondary]="activeStatusFilter() !== 'INCOMPLETO'"
+                            [class.text-dark]="activeStatusFilter() !== 'INCOMPLETO'"
+                            (click)="setStatusFilter('INCOMPLETO')">
+                            Incompleto
+                        </button>
+                        <button class="btn rounded-pill px-4 fw-medium" 
+                            [class.btn-danger]="activeStatusFilter() === 'VENCIDO'"
+                            [class.btn-outline-secondary]="activeStatusFilter() !== 'VENCIDO'"
+                            [class.text-dark]="activeStatusFilter() !== 'VENCIDO'"
+                            (click)="setStatusFilter('VENCIDO')">
+                            Vencido
+                        </button>
+                        <button class="btn rounded-pill px-4 fw-medium" 
+                            [class.btn-secondary]="activeStatusFilter() === 'INDOCUMENTADO'"
+                            [class.btn-outline-secondary]="activeStatusFilter() !== 'INDOCUMENTADO'"
+                            [class.text-dark]="activeStatusFilter() !== 'INDOCUMENTADO'"
+                            (click)="setStatusFilter('INDOCUMENTADO')">
+                            Indocumentado
+                        </button>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        
+                        @if (isLoading()) {
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-danger" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                                <p class="text-muted mt-2">Cargando territorios...</p>
+                            </div>
+                        }
+
+                        @if (!isLoading()) {
+                        <table class="table align-middle mt-3 table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom pb-3 fw-bold text-dark text-center">Territorio</th>
+                                    <th class="border-bottom pb-3 fw-bold text-dark text-center">Tipo</th>
+                                    <th class="border-bottom pb-3 fw-bold text-dark text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (entry of filteredEntries(); track entry.id) {
+                                    <!-- Main Row -->
+                                    <tr class="cursor-pointer" (click)="toggleRow(entry)" [class.bg-light]="expandedRow()?.id === entry.id">
+                                        <td class="py-3 text-center fw-medium fs-5" [style.color]="entry.mapColor || '#333'">
+                                            {{entry.territoryNumber}}
+                                            @if (expandedRow()?.id !== entry.id) {
+                                                <i class="bi bi-chevron-down ms-2 small text-secondary"></i>
+                                            }
+                                            @if (expandedRow()?.id === entry.id) {
+                                                <i class="bi bi-chevron-up ms-2 small text-secondary"></i>
+                                            }
+                                        </td>
+
+                                        <td class="py-3 text-center text-muted">
+                                            {{entry.territoryType}}
+                                        </td>
+                                        
+                                        <td class="py-3 text-center fw-medium" 
+                                            [class.text-success]="entry.status === 'COMPLETADO'"
+                                            [class.text-warning]="entry.status === 'INCOMPLETO'"
+                                            [class.text-danger]="entry.status === 'VENCIDO'"
+                                            [class.text-secondary]="entry.status === 'INDOCUMENTADO'">
+                                            {{entry.status}}
+                                        </td>
+                                    </tr>
+
+                                    <!-- Expanded Details Row -->
+                                    @if (expandedRow()?.id === entry.id) {
+                                        <tr class="detail-row bg-light border-bottom">
+                                            <td colspan="3" class="p-0 border-0">
+                                                <div class="p-4 border-start border-4 border-danger m-2 rounded-end bg-white shadow-sm">
+                                                    
+                                                    @if (isHistoryLoading()) {
+                                                        <div class="text-center py-3">
+                                                            <div class="spinner-grow spinner-grow-sm text-danger me-2" role="status"></div>
+                                                            <span class="text-muted small">Cargando historial...</span>
+                                                        </div>
+                                                    }
+                                                    
+                                                    @if (!isHistoryLoading() && expandedHistory().length > 0) {
+                                                        <!-- Last Record Detail -->
+                                                        <h6 class="fw-bold text-dark mb-3"><i class="bi bi-clock-history text-danger me-2"></i>Último Registro</h6>
+                                                        <div class="row g-3 mb-4">
+                                                            <div class="col-md-4">
+                                                                <p class="mb-1 text-secondary small text-uppercase fw-bold">Capitán</p>
+                                                                <p class="mb-0 text-dark">{{expandedHistory()[0].publisher?.name}} {{expandedHistory()[0].publisher?.lastName}}</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p class="mb-1 text-secondary small text-uppercase fw-bold">Lugar de Salida</p>
+                                                                <p class="mb-0 text-dark">{{expandedHistory()[0].outingPlace?.familyName}}</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p class="mb-1 text-secondary small text-uppercase fw-bold">Fecha Asignado</p>
+                                                                <p class="mb-0 text-dark">{{expandedHistory()[0].dateAssigned}}</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p class="mb-1 text-secondary small text-uppercase fw-bold">Día Trabajado</p>
+                                                                <p class="mb-0 text-dark">{{expandedHistory()[0].dateWorked}}</p>
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <p class="mb-1 text-secondary small text-uppercase fw-bold">Manzanas Completadas</p>
+                                                                <p class="mb-0 text-dark">
+                                                                    @if (expandedHistory()[0].allBlocksCompleted) {
+                                                                        <span class="badge bg-success">Todas (Completo)</span>
+                                                                    } @else {
+                                                                        @for (br of expandedHistory()[0].blockRecords; track br.blockId; let last = $last) {
+                                                                           <span class="badge bg-warning text-dark me-1">{{br.block?.badge}}</span>
+                                                                        }
+                                                                        @if (!expandedHistory()[0].blockRecords?.length) {
+                                                                            <span class="text-muted small">Ninguna registrada</span>
+                                                                        }
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-12 mt-2">
+                                                                <p class="mb-1 text-secondary small text-uppercase fw-bold">Comentario</p>
+                                                                <p class="mb-0 text-dark fst-italic">
+                                                                    {{ expandedHistory()[0].comment || 'Sin comentarios.' }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- History List -->
+                                                        @if (expandedHistory().length > 1) {
+                                                            <hr class="text-muted opacity-25">
+                                                            <h6 class="fw-bold text-dark mt-3 mb-3 fs-6"><i class="bi bi-list-ul text-secondary me-2"></i>Historial Anterior</h6>
+                                                            <div class="list-group list-group-flush small">
+                                                                @for (hist of expandedHistory().slice(1); track hist.id) {
+                                                                    <div class="list-group-item bg-transparent px-0 border-light d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <span class="fw-medium text-dark">{{hist.dateWorked}}</span>
+                                                                            <span class="text-muted ms-2">— {{hist.publisher?.name}} {{hist.publisher?.lastName}}</span>
+                                                                        </div>
+                                                                        <div>
+                                                                            @if (hist.allBlocksCompleted) {
+                                                                                <span class="badge bg-success-subtle text-success border border-success-subtle">Completo</span>
+                                                                            } @else {
+                                                                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Incompleto</span>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    }
+
+                                                    @if (!isHistoryLoading() && expandedHistory().length === 0) {
+                                                        <div class="text-center py-3 text-muted">
+                                                            <i class="bi bi-info-circle me-1"></i> No existen registros históricos para este territorio.
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                @if (filteredEntries().length === 0) {
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">No hay territorios con este estado.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

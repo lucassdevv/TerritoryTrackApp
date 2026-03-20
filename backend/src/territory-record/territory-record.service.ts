@@ -23,11 +23,13 @@ export class TerritoryRecordService {
     return this.prisma.$transaction(async (tx)=>{
 
       
-      const dateCompletedFlag = allBlocksCompleted ? recordData.dateWorked : null;
+      const dateCompletedFlag = allBlocksCompleted ? new Date(recordData.dateWorked) : null;
 
       const record = await tx.territoryRecord.create({
         data:{
           ...recordData,
+          dateAssigned: new Date(recordData.dateAssigned),
+          dateWorked: new Date(recordData.dateWorked),
           territoryId: territory.id,
           dateCompleted: dateCompletedFlag
         }

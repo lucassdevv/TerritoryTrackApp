@@ -19,7 +19,7 @@ export class App {
 
   ngOnInit(){
     this.http.get(`${environment.apiUrl}/territories`).subscribe({
-      next: (res) => console.log('backend Ok:', res),
+      next: (res) => {},
       error: (err) => console.error('Error backend', err),
     });
   }

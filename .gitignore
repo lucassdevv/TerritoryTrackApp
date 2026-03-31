@@ -7,4 +7,3 @@ Thumbs.db
 # IDEs
 .idea/
 .vscode/
-backend/prisma/seeder.ts

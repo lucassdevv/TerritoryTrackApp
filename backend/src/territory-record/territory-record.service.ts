@@ -65,12 +65,14 @@ export class TerritoryRecordService {
 
   async findAll() {
     const records = await this.prisma.territoryRecord.findMany({
-      include: {territory:true, publisher:true, outingPlace:true, blockRecords: {include:{block:true}}}
+      include: {territory:true, publisher:true, outingPlace:true, blockRecords: {include:{block:true}}},
+      orderBy: { dateWorked: 'desc' }
     });
 
     //aqui formatearemos las fechas antes de mandarlas.
     return records.map(r =>({
       ...r,
+      allBlocksCompleted: !!r.dateCompleted,
       dateAssigned: format(r.dateAssigned, 'dd/MM/yyyy'),
       dateWorked: format(r.dateWorked, 'dd/MM/yyyy'),
       dateCompleted: r.dateCompleted ? format(r.dateCompleted, 'dd/MM/yyyy') : null
@@ -84,7 +86,7 @@ export class TerritoryRecordService {
         territory: true,
         publisher: true,
         outingPlace: true,
-        blockRecords: true
+        blockRecords: { include: { block: true } }
       }
     })
     if(!territoryRecord) {
@@ -92,6 +94,7 @@ export class TerritoryRecordService {
     }
     return {
       ...territoryRecord,
+      allBlocksCompleted: !!territoryRecord.dateCompleted,
       dateAssigned: format(territoryRecord.dateAssigned, 'dd/MM/yyyy'),
       dateWorked: format(territoryRecord.dateWorked, 'dd/MM/yyyy'),
       dateCompleted: territoryRecord.dateCompleted ? format(territoryRecord.dateCompleted, 'dd/MM/yyyy') : null
@@ -99,16 +102,24 @@ export class TerritoryRecordService {
 
   }
 
-  async findByTerritory(territoryIdParam: number){
+  async findByTerritory(territoryNumber: number){
+    
+    const territory = await this.prisma.territory.findUnique({
+       where: { territoryNumber }
+    });
+
+    if(!territory) return [];
 
     const records = await this.prisma.territoryRecord.findMany({
-      where: {territoryId: territoryIdParam},
-      include: {publisher: true, outingPlace: true, territory: true}
+      where: {territoryId: territory.id},
+      include: {publisher: true, outingPlace: true, territory: true, blockRecords: { include: { block: true } }},
+      orderBy: { dateWorked: 'desc' }
     })
 
 
     return records.map(r => ({
       ...r,
+      allBlocksCompleted: !!r.dateCompleted,
       dateAssigned: format(r.dateAssigned, 'dd/MM/yyyy'),
       dateWorked: format(r.dateWorked, 'dd/MM/yyyy'),
       dateCompleted: r.dateCompleted ? format(r.dateCompleted,'dd/MM/yyyy') : null

@@ -4,4 +4,5 @@ export interface TerritoryStatusModel {
     mapColor: string;
     territoryType: string;
     status: 'COMPLETADO' | 'INCOMPLETO' | 'VENCIDO' | 'INDOCUMENTADO';
+    assignedTo?: string;
 }

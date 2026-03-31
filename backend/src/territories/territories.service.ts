@@ -30,7 +30,8 @@ export class TerritoriesService {
       include:{
         territoryRecords:{
           orderBy: {dateWorked: 'desc'},
-          take: 1
+          take: 1,
+          include: { publisher: true }
         }
       }
     })
@@ -49,10 +50,13 @@ export class TerritoriesService {
       } else {
         status = 'VENCIDO'
       }
+      
+      const assignedTo = lastRecord?.publisher ? `${lastRecord.publisher.name} ${lastRecord.publisher.lastName}` : 'No asignado';
 
       return{
         ...territory,
-        status
+        status,
+        assignedTo
       }
     })
   }

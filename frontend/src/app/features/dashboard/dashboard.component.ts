@@ -85,12 +85,13 @@ export class DashboardComponent {
     this.expandedHistory.set([]);
     
     // We use byterritory endpoint using territoryNumber since Prisma looks for PK vs Number? Wait, backend says ParseIntPipe territoryId. I need to make sure I pass territory.id. 
-    // Yes, territory.findUnique used territoryNumber. In backend `territory-record/byterritory?territoryid=X` it queries `where: {territoryId: X}` so it wants the ID, not the number.
-    const territoryId = this.expandedRow()?.id;
+    // Yes, territory.findUnique used territoryNumber. In backend `territory-record/byterritory?territoryid=X` so it wants the ID, not the number.
+    // const territoryId = this.expandedRow()?.id; // This line is no longer needed as we use territoryNumber directly
 
-    if (!territoryId) return;
+    // if (!territoryId) return; // This check is no longer needed
 
-    this.http.get<TerritoryRecordModel[]>(`${environment.apiUrl}/territory-record/byterritory?territoryid=${territoryId}`)
+    // Fetch historical records
+    this.http.get<TerritoryRecordModel[]>(`${environment.apiUrl}/territory-record/byterritory?territoryid=${territoryNumber}`)
       .subscribe({
         next: (records) => {
           // Sort descending by date worked and take last 5

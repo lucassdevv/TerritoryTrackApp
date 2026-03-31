@@ -1,23 +1,29 @@
 <div class="min-vh-100 d-flex flex-column bg-light">
   <!-- Top Navigation (Red Theme matching Login) -->
-  <header class="bg-danger text-white py-3 px-4 d-flex justify-content-between align-items-center shadow-sm">
-    <div class="d-flex align-items-center gap-2">
-      <div class="rounded-circle bg-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-        <i class="bi bi-map text-danger fs-5"></i>
+  <header class="bg-danger text-white py-2 py-md-3 px-3 px-md-4 d-flex justify-content-between align-items-center shadow-sm" style="border-bottom: 3px solid #b91c1c;">
+    <div class="d-flex align-items-center gap-2 gap-md-3">
+      <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+        <i class="bi bi-map-fill text-danger fs-5"></i>
       </div>
-      <strong class="fs-5 mb-0">Sistema de Territorios</strong>
+      <span class="fs-5 fs-md-4 fw-medium mb-0 tracking-tight text-truncate d-none d-sm-block" style="letter-spacing: -0.5px;">Sistema de Territorios</span>
     </div>
     
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-3 gap-md-4">
         <!-- Optional Links to switch between routes for easy testing -->
-        <a routerLink="/dashboard" class="text-white text-decoration-none" routerLinkActive="fw-bold">Dashboard</a>
-        <a routerLink="/territory-record-form" class="text-white text-decoration-none" routerLinkActive="fw-bold">Formulario</a>
-        <button routerLink="/login" class="btn btn-outline-light btn-sm fw-semibold px-3 rounded-pill">Salir</button>
+        <a routerLink="/dashboard" class="text-white text-decoration-none opacity-75 transition-all d-flex align-items-center" routerLinkActive="fw-medium opacity-100">
+            <i class="bi bi-grid-1x2-fill d-md-none fs-5"></i>
+            <span class="d-none d-md-inline">Dashboard</span>
+        </a>
+        <a routerLink="/territory-record-form" class="text-white text-decoration-none opacity-75 transition-all d-flex align-items-center" routerLinkActive="fw-medium opacity-100">
+            <i class="bi bi-file-earmark-plus-fill d-md-none fs-5"></i>
+            <span class="d-none d-md-inline">Formulario</span>
+        </a>
+        <button routerLink="/login" class="btn btn-light btn-sm px-3 px-md-4 rounded-pill shadow-sm text-danger fw-medium ms-1" style="letter-spacing: 0.2px;">Salir</button>
     </div>
   </header>
 
   <!-- Main Content Area -->
-  <main class="flex-grow-1 p-4">
+  <main class="flex-grow-1 p-2 p-md-4">
     <router-outlet></router-outlet>
   </main>
 </div>

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { UpdatePublisherDto } from './dto/update-publisher.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -7,25 +7,46 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PublishersService {
   constructor(private prisma: PrismaService){}
 
-  create(createPublisherDto: CreatePublisherDto) {
-    return 'This action adds a new publisher';
+  async create(createPublisherDto: CreatePublisherDto) {
+    return this.prisma.publisher.create({
+      data: createPublisherDto
+    });
   }
 
   async findAll() {
     return this.prisma.publisher.findMany({
-      orderBy: {name: 'asc'}
+      orderBy: { name: 'asc' },
+      include: { role: true }
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} publisher`;
+  async findOne(id: number) {
+    const publisher = await this.prisma.publisher.findUnique({
+      where: { id },
+      include: { role: true }
+    });
+    
+    if (!publisher) {
+      throw new NotFoundException(`Publicador con ID #${id} no encontrado`);
+    }
+    
+    return publisher;
   }
 
-  update(id: number, updatePublisherDto: UpdatePublisherDto) {
-    return `This action updates a #${id} publisher`;
+  async update(id: number, updatePublisherDto: UpdatePublisherDto) {
+    await this.findOne(id);
+    
+    return this.prisma.publisher.update({
+      where: { id },
+      data: updatePublisherDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} publisher`;
+  async remove(id: number) {
+    await this.findOne(id);
+    
+    return this.prisma.publisher.delete({
+      where: { id }
+    });
   }
 }

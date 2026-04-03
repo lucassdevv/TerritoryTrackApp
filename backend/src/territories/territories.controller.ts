@@ -27,5 +27,13 @@ export class TerritoriesController {
     return this.territoriesService.findOneByTerritoryNumber(+territoryNumber);
   }
 
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateTerritoryDto: UpdateTerritoryDto) {
+    return this.territoriesService.update(+id, updateTerritoryDto);
+  }
 
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.territoriesService.remove(+id);
+  }
 }

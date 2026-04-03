@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTerritoryDto } from './dto/create-territory.dto';
 import { UpdateTerritoryDto } from './dto/update-territory.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,19 +8,27 @@ import { subDays } from 'date-fns';
 export class TerritoriesService {
   constructor(private prisma: PrismaService){}
 
-  create(createTerritoryDto: CreateTerritoryDto) {
-    return 'This action adds a new territory';
+  async create(createTerritoryDto: CreateTerritoryDto) {
+    return this.prisma.territory.create({
+      data: createTerritoryDto
+    });
   }
 
   async findAll() {
     return this.prisma.territory.findMany();
   }
 
-  async findOneByTerritoryNumber(id: number){
-    return this.prisma.territory.findUnique({
-      where: {territoryNumber: id},
-      include: {blocks:true},
-    })
+  async findOneByTerritoryNumber(territoryNumber: number){
+    const territory = await this.prisma.territory.findUnique({
+      where: { territoryNumber },
+      include: { blocks: true },
+    });
+
+    if (!territory) {
+      throw new NotFoundException(`Territorio #${territoryNumber} no encontrado`);
+    }
+
+    return territory;
   }
 
   async findTerritoriresStatus(daysthreshold: number){
@@ -61,4 +69,23 @@ export class TerritoriesService {
     })
   }
 
+  async update(id: number, updateTerritoryDto: UpdateTerritoryDto) {
+    // Nota: Aquí 'id' es el autoincremental de la DB
+    const territory = await this.prisma.territory.findUnique({ where: { id } });
+    if (!territory) throw new NotFoundException(`Territorio con ID ${id} no encontrado`);
+
+    return this.prisma.territory.update({
+      where: { id },
+      data: updateTerritoryDto
+    });
+  }
+
+  async remove(id: number) {
+    const territory = await this.prisma.territory.findUnique({ where: { id } });
+    if (!territory) throw new NotFoundException(`Territorio con ID ${id} no encontrado`);
+
+    return this.prisma.territory.delete({
+      where: { id }
+    });
+  }
 }

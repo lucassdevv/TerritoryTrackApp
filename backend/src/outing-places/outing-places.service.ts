@@ -1,33 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOutingPlaceDto } from './dto/create-outing-place.dto';
 import { UpdateOutingPlaceDto } from './dto/update-outing-place.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class OutingPlacesService {
-  constructor (private prisma: PrismaService){}
-  create(createOutingPlaceDto: CreateOutingPlaceDto) {
-    return 'This action adds a new outingPlace';
+  constructor(private prisma: PrismaService){}
+
+  async create(createOutingPlaceDto: CreateOutingPlaceDto) {
+    return this.prisma.outingPlace.create({
+      data: createOutingPlaceDto
+    });
   }
 
   async findAll() {
     return this.prisma.outingPlace.findMany({
-      select: {
-        id:true,
-        familyName:true
-      }
+      orderBy: { familyName: 'asc' }
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} outingPlace`;
+  async findOne(id: number) {
+    const outingPlace = await this.prisma.outingPlace.findUnique({
+      where: { id }
+    });
+
+    if (!outingPlace) {
+      throw new NotFoundException(`Lugar de salida #${id} no encontrado`);
+    }
+
+    return outingPlace;
   }
 
-  update(id: number, updateOutingPlaceDto: UpdateOutingPlaceDto) {
-    return `This action updates a #${id} outingPlace`;
+  async update(id: number, updateOutingPlaceDto: UpdateOutingPlaceDto) {
+    await this.findOne(id);
+    
+    return this.prisma.outingPlace.update({
+      where: { id },
+      data: updateOutingPlaceDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} outingPlace`;
+  async remove(id: number) {
+    await this.findOne(id);
+    
+    return this.prisma.outingPlace.delete({
+      where: { id }
+    });
   }
 }

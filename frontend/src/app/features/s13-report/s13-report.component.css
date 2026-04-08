@@ -1,0 +1,368 @@
+/* ===================================================
+   S-13 Territory Assignment Record — Styles
+   Designed to match the physical S-13 form exactly.
+   Uses @media print to produce a clean, bordered PDF.
+   =================================================== */
+
+/* ---- Screen toolbar ---- */
+.s13-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+.s13-toolbar h2 {
+  color: #f8fafc;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.3px;
+}
+
+.s13-toolbar h2 i {
+  font-size: 1.3rem;
+  color: #f87171;
+}
+
+.btn-print {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.btn-print:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.4);
+}
+
+.btn-print:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Loading / Error states ---- */
+.s13-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  color: #64748b;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #dc2626;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.s13-error {
+  text-align: center;
+  padding: 2rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.s13-error i {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+/* ---- Page container (each printed page) ---- */
+.s13-page {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+/* ---- Header ---- */
+.s13-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.s13-title {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+}
+
+.s13-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.s13-year-label {
+  font-weight: 500;
+  color: #475569;
+}
+
+.s13-year-value {
+  font-weight: 700;
+  padding: 2px 12px;
+  border: 2px solid #1e293b;
+  border-radius: 4px;
+  color: #1e293b;
+}
+
+/* ---- Table ---- */
+.s13-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 0.7rem;
+  table-layout: fixed;
+}
+
+.s13-table th,
+.s13-table td {
+  border: 1px solid #94a3b8;
+  padding: 3px 4px;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Column widths */
+.col-territory {
+  width: 50px;
+}
+
+.col-last-completed {
+  width: 70px;
+}
+
+.col-group-header {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.72rem;
+  border-bottom: 2px solid #64748b;
+}
+
+.col-name {
+  width: auto;
+  min-width: 80px;
+}
+
+.col-date {
+  width: 65px;
+  min-width: 55px;
+}
+
+/* Header rows */
+.s13-header-row th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.68rem;
+  line-height: 1.25;
+  padding: 4px 3px;
+}
+
+.s13-subheader-row th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.62rem;
+  line-height: 1.2;
+  padding: 3px 2px;
+}
+
+/* Data rows */
+.s13-data-row-top,
+.s13-data-row-bottom {
+  height: 18px;
+}
+
+.s13-data-row-top:hover,
+.s13-data-row-bottom:hover {
+  background: inherit; /* Removing hover effect as they are split across two tr */
+}
+
+.cell-territory {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.8rem;
+  background: #f8fafc;
+}
+
+.cell-last-completed {
+  font-size: 0.68rem;
+  color: #475569;
+  background: #fefce8;
+}
+
+.cell-name {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: center;
+}
+
+.cell-date {
+  font-size: 0.65rem;
+  color: #64748b;
+  width: 50%;
+}
+
+/* Force empty cells to have text-level height */
+.s13-table td:empty::after {
+  content: "\00a0";
+}
+
+.s13-empty-row-top td,
+.s13-empty-row-bottom td {
+  background: #fafafa;
+  height: 18px;
+}
+
+/* ---- Footer ---- */
+.s13-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.s13-form-id {
+  font-weight: 600;
+}
+
+.s13-footnote {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   PRINT STYLES — Hide app chrome, show only the S-13 form
+   ============================================================ */
+@media print {
+  /* Hide everything outside the report */
+  .no-print,
+  header,
+  nav,
+  .s13-toolbar {
+    display: none !important;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .s13-page {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 8mm 6mm;
+    margin: 0;
+    page-break-after: always;
+    overflow: visible;
+  }
+
+  .s13-page:last-child {
+    page-break-after: auto;
+  }
+
+  .s13-table th,
+  .s13-table td {
+    border: 1px solid #333 !important;
+    font-size: 7.5pt;
+    padding: 2px 3px;
+  }
+
+  .s13-header-row th {
+    background: #eee !important;
+  }
+
+  .s13-subheader-row th {
+    background: #f5f5f5 !important;
+  }
+
+  .col-group-header {
+    background: #eee !important;
+    border-bottom: 2px solid #333 !important;
+  }
+
+  .cell-territory {
+    background: #f8f8f8 !important;
+  }
+
+  .cell-last-completed {
+    background: #fefde8 !important;
+  }
+
+  .s13-data-row-top,
+  .s13-data-row-bottom,
+  .s13-empty-row-top,
+  .s13-empty-row-bottom {
+    height: 6mm !important;
+  }
+
+  .s13-title {
+    font-size: 12pt;
+  }
+
+  .s13-year {
+    font-size: 10pt;
+  }
+
+  .s13-year-value {
+    border: 1.5px solid #000;
+  }
+
+  @page {
+    size: landscape;
+    margin: 8mm;
+  }
+}

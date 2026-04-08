@@ -1,0 +1,108 @@
+<!-- Screen-only toolbar -->
+<div class="s13-toolbar no-print">
+  <h2>
+    <i class="bi bi-file-earmark-text"></i>
+    Registro de Asignación de Territorio (S-13)
+  </h2>
+  <button class="btn-print" (click)="printReport()" [disabled]="isLoading()">
+    <i class="bi bi-printer"></i>
+    Imprimir S-13
+  </button>
+</div>
+
+<!-- Loading state -->
+@if (isLoading()) {
+  <div class="s13-loading no-print">
+    <div class="spinner"></div>
+    <p>Cargando reporte...</p>
+  </div>
+}
+
+<!-- Error state -->
+@if (errorMessage()) {
+  <div class="s13-error no-print">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ errorMessage() }}
+  </div>
+}
+
+<!-- Report pages -->
+@if (report(); as rpt) {
+  @for (page of pages(); track $index) {
+    <div class="s13-page">
+      <!-- Header -->
+      <div class="s13-header">
+        <h1 class="s13-title">REGISTRO DE ASIGNACIÓN DE TERRITORIO</h1>
+        <div class="s13-year">
+          <span class="s13-year-label">Año de servicio:</span>
+          <span class="s13-year-value">{{ rpt.serviceYearLabel }}</span>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <table class="s13-table">
+        <thead>
+          <tr class="s13-header-row">
+            <th rowspan="2" class="col-territory">Núm. de<br>terr.</th>
+            <th rowspan="2" class="col-last-completed">Última fecha<br>en que se<br>completó*</th>
+            @for (i of [1, 2, 3, 4]; track i) {
+              <th colspan="2" class="col-group-header">Asignado a</th>
+            }
+          </tr>
+          <tr class="s13-subheader-row">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <th class="col-date">Fecha en que<br>se asignó</th>
+              <th class="col-date">Fecha en que<br>se completó</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of page; track $index) {
+            <tr class="s13-data-row-top">
+              <td rowspan="2" class="cell-territory">{{ row.territoryNumber }}</td>
+              <td rowspan="2" class="cell-last-completed">{{ row.lastCompletedDate ?? '' }}</td>
+              @for (assignment of padAssignments(row); track $index) {
+                <td colspan="2" class="cell-name">{{ assignment?.publisherName ?? '' }}</td>
+              }
+            </tr>
+            <tr class="s13-data-row-bottom">
+              @for (assignment of padAssignments(row); track $index) {
+                <td class="cell-date">{{ assignment?.dateAssigned ?? '' }}</td>
+                <td class="cell-date">{{ assignment?.dateCompleted ?? '' }}</td>
+              }
+            </tr>
+          }
+          <!-- Fill remaining empty rows to reach ROWS_PER_PAGE -->
+          @for (emptyRow of getEmptyRows(page.length); track $index) {
+            <tr class="s13-empty-row-top">
+              <td rowspan="2" class="cell-territory"></td>
+              <td rowspan="2" class="cell-last-completed"></td>
+              @for (i of [1, 2, 3, 4]; track i) {
+                <td colspan="2" class="cell-name"></td>
+              }
+            </tr>
+            <tr class="s13-empty-row-bottom">
+              @for (i of [1, 2, 3, 4]; track i) {
+                <td class="cell-date"></td>
+                <td class="cell-date"></td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- Footer -->
+      <div class="s13-footer">
+        <span class="s13-form-id">S-13-S</span>
+        <span class="s13-page-number">{{ $index + 1 }}/{{ pages().length }}</span>
+      </div>
+
+      <!-- Footnote on last page -->
+      @if ($index === pages().length - 1) {
+        <p class="s13-footnote">
+          *Cuando comience una nueva página, anote en esta columna la última fecha en que los territorios se completaron
+        </p>
+      }
+    </div>
+  }
+}

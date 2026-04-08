@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe 
 import { TerritoryRecordService } from './territory-record.service';
 import { CreateTerritoryRecordDto } from './dto/create-territory-record.dto';
 import { UpdateTerritoryRecordDto } from './dto/update-territory-record.dto';
+import { S13ReportQueryDto } from './dto/s13-report.dto';
 
 @Controller('territory-record')
 export class TerritoryRecordController {
@@ -10,6 +11,11 @@ export class TerritoryRecordController {
   @Post()
   create(@Body() createTerritoryRecordDto: CreateTerritoryRecordDto) {
     return this.territoryRecordService.create(createTerritoryRecordDto);
+  }
+
+  @Get('s13-report')
+  getS13Report(@Query() query: S13ReportQueryDto) {
+    return this.territoryRecordService.getS13Report(query);
   }
 
   @Get()

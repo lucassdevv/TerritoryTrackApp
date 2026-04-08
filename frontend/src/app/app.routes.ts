@@ -24,6 +24,12 @@ export const routes: Routes = [
                 data: { role: 'Service_Overseer' },
                 loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
             },
+            {
+                path: 's13',
+                canActivate: [roleGuard],
+                data: { role: 'Service_Overseer' },
+                loadComponent: () => import('./features/s13-report/s13-report.component').then(m => m.S13ReportComponent)
+            },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     },
